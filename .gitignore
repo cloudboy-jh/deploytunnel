@@ -1,0 +1,48 @@
+# Binaries
+dt
+deploy-tunnel
+*.exe
+*.dll
+*.so
+*.dylib
+
+# Test binary, built with `go test -c`
+*.test
+
+# Output of the go coverage tool
+*.out
+coverage.html
+
+# Go workspace file
+go.work
+
+# Dependency directories
+vendor/
+node_modules/
+
+# State and config
+.deploy-tunnel/
+state.db
+config.yaml
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Logs
+*.log
+logs/
+
+# Bun
+.bun/
+
+# Build artifacts
+dist/
+build/

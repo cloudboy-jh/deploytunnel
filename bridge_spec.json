@@ -1,0 +1,266 @@
+{
+  "$schema": "https://json-schema.org/draft-07/schema",
+  "title": "Deploy Tunnel Adapter Bridge Protocol",
+  "version": "1.0.0",
+  "description": "JSON-based protocol for Go ↔ Bun adapter communication over stdout/stderr",
+
+  "commands": {
+    "auth:start": {
+      "description": "Initiate OAuth or token-based authentication",
+      "request": {
+        "verb": "auth:start",
+        "params": {
+          "provider": "string (vercel|cloudflare|render|netlify)",
+          "callback_url": "string? (for OAuth flows)"
+        }
+      },
+      "response": {
+        "ok": "boolean",
+        "data": {
+          "auth_url": "string? (OAuth URL to open in browser)",
+          "token": "string? (if token flow)",
+          "expires_at": "number? (unix timestamp)"
+        }
+      }
+    },
+
+    "auth:refresh": {
+      "description": "Refresh authentication token",
+      "request": {
+        "verb": "auth:refresh",
+        "params": {
+          "provider": "string",
+          "refresh_token": "string"
+        }
+      },
+      "response": {
+        "ok": "boolean",
+        "data": {
+          "token": "string",
+          "expires_at": "number"
+        }
+      }
+    },
+
+    "fetch:config": {
+      "description": "Retrieve project configuration, build settings, and environment variables",
+      "request": {
+        "verb": "fetch:config",
+        "params": {
+          "provider": "string",
+          "token": "string",
+          "project_id": "string? (optional project identifier)"
+        }
+      },
+      "response": {
+        "ok": "boolean",
+        "data": {
+          "project": {
+            "id": "string",
+            "name": "string",
+            "domain": "string",
+            "framework": "string? (nextjs|react|vue|etc)"
+          },
+          "build": {
+            "command": "string",
+            "output_dir": "string",
+            "install_command": "string?"
+          },
+          "env": [
+            {
+              "key": "string",
+              "value": "string",
+              "target": "string[] (production|preview|development)"
+            }
+          ]
+        }
+      }
+    },
+
+    "sync:env": {
+      "description": "Push environment variables to target provider",
+      "request": {
+        "verb": "sync:env",
+        "params": {
+          "provider": "string",
+          "token": "string",
+          "project_id": "string",
+          "env_vars": [
+            {
+              "key": "string",
+              "value": "string",
+              "target": "string[] (production|preview|development)"
+            }
+          ]
+        }
+      },
+      "response": {
+        "ok": "boolean",
+        "data": {
+          "synced": "number (count of vars synced)",
+          "failed": "string[] (keys that failed)"
+        }
+      }
+    },
+
+    "deploy:preview": {
+      "description": "Create a preview deployment",
+      "request": {
+        "verb": "deploy:preview",
+        "params": {
+          "provider": "string",
+          "token": "string",
+          "project_id": "string",
+          "branch": "string? (git branch)",
+          "env": "object? (additional env overrides)"
+        }
+      },
+      "response": {
+        "ok": "boolean",
+        "data": {
+          "deployment_id": "string",
+          "url": "string (preview URL)",
+          "status": "string (queued|building|ready|error)",
+          "build_time": "number? (seconds)"
+        }
+      }
+    },
+
+    "dns:update": {
+      "description": "Create or update DNS record",
+      "request": {
+        "verb": "dns:update",
+        "params": {
+          "provider": "string",
+          "token": "string",
+          "domain": "string",
+          "record_type": "string (A|AAAA|CNAME|TXT)",
+          "record_name": "string",
+          "record_value": "string",
+          "ttl": "number? (seconds, default 300)"
+        }
+      },
+      "response": {
+        "ok": "boolean",
+        "data": {
+          "record_id": "string",
+          "previous_value": "string? (for rollback)",
+          "propagation_time": "number (estimated seconds)"
+        }
+      }
+    },
+
+    "dns:rollback": {
+      "description": "Restore previous DNS record",
+      "request": {
+        "verb": "dns:rollback",
+        "params": {
+          "provider": "string",
+          "token": "string",
+          "record_id": "string",
+          "rollback_to": "string (previous value)"
+        }
+      },
+      "response": {
+        "ok": "boolean",
+        "data": {
+          "restored": "boolean",
+          "current_value": "string"
+        }
+      }
+    },
+
+    "capabilities": {
+      "description": "List supported commands for this adapter",
+      "request": {
+        "verb": "capabilities"
+      },
+      "response": {
+        "ok": "boolean",
+        "data": {
+          "adapter_name": "string",
+          "adapter_version": "string",
+          "supported_verbs": "string[]",
+          "auth_type": "string (oauth|token|api_key)",
+          "features": {
+            "dns_management": "boolean",
+            "preview_deployments": "boolean",
+            "env_variables": "boolean",
+            "build_logs": "boolean"
+          }
+        }
+      }
+    }
+  },
+
+  "error_codes": {
+    "AUTH_FAILED": "Authentication failed or token expired",
+    "AUTH_REQUIRED": "Authentication required before this operation",
+    "PROVIDER_ERROR": "Provider API returned an error",
+    "NETWORK_ERROR": "Network request failed",
+    "INVALID_PARAMS": "Invalid parameters provided",
+    "NOT_FOUND": "Resource not found (project, deployment, etc)",
+    "RATE_LIMITED": "Rate limit exceeded",
+    "UNSUPPORTED": "Command not supported by this adapter",
+    "TIMEOUT": "Operation timed out",
+    "UNKNOWN": "Unknown error occurred"
+  },
+
+  "response_schema": {
+    "type": "object",
+    "required": ["ok"],
+    "properties": {
+      "ok": {
+        "type": "boolean",
+        "description": "Whether the operation succeeded"
+      },
+      "data": {
+        "type": "object",
+        "description": "Response payload (structure depends on command)"
+      },
+      "error": {
+        "type": "object",
+        "required": ["code", "message"],
+        "properties": {
+          "code": {
+            "type": "string",
+            "description": "Error code from error_codes enum"
+          },
+          "message": {
+            "type": "string",
+            "description": "Human-readable error message"
+          },
+          "recoverable": {
+            "type": "boolean",
+            "description": "Whether the operation can be retried"
+          },
+          "details": {
+            "type": "object",
+            "description": "Additional error context"
+          }
+        }
+      },
+      "adapter_version": {
+        "type": "string",
+        "description": "Version of the adapter that generated this response"
+      }
+    }
+  },
+
+  "transport": {
+    "method": "subprocess",
+    "stdin": "JSON command object",
+    "stdout": "JSON response object",
+    "stderr": "Logs and debug output (not parsed)"
+  },
+
+  "execution": {
+    "command": "bun run adapters/{provider}/index.ts {verb}",
+    "timeout": 30000,
+    "retry_policy": {
+      "max_attempts": 3,
+      "backoff": "exponential",
+      "recoverable_errors": ["NETWORK_ERROR", "TIMEOUT", "RATE_LIMITED"]
+    }
+  }
+}
