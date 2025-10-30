@@ -46,10 +46,10 @@ Domain: myapp.com
 
 ℹ Checking authentication status...
 
-⚠ No credentials found for vercel
+! No credentials found for vercel
 ℹ Run: dt auth vercel
 
-⚠ No credentials found for cloudflare
+! No credentials found for cloudflare
 ℹ Run: dt auth cloudflare
 
 ℹ Next steps:
@@ -161,7 +161,7 @@ Target (cloudflare): 0 variables
 ✓ Synced: 12 variables
 ✗ Failed: 0 variables
 
-⚠ Note: Sensitive values are encrypted at rest
+Note: Sensitive values are encrypted at rest
 ```
 
 ### Step 7: Create Preview Tunnel (Coming Soon)
@@ -209,10 +209,10 @@ Route                    Source  Target  Status
 
 Summary:
   ✓ Passed: 45 (95.7%)
-  ⚠ Warnings: 1 (2.1%)
+  ! Warnings: 1 (2.1%)
   ✗ Failed: 1 (2.1%)
 
-⚠ /api/posts returned 500 on target
+! /api/posts returned 500 on target
   Investigate before cutover
 
 ✓ Verification complete (95.7% pass rate)
@@ -233,7 +233,7 @@ Current: vercel (A → 76.76.21.21)
 New: cloudflare (CNAME → myapp.pages.dev)
 TTL: 300 seconds (5 minutes)
 
-⚠ This action is reversible via 'dt rollback'
+Note: This action is reversible via 'dt rollback'
 
 ? Ready to update DNS? (y/n): y
 
@@ -259,7 +259,7 @@ TTL: 300 seconds (5 minutes)
 ```bash
 $ dt rollback
 
-⚠ Rolling back DNS to previous configuration
+! Rolling back DNS to previous configuration
 
 Domain: myapp.com
 Previous: vercel (A → 76.76.21.21)

@@ -330,10 +330,10 @@ Add provider-specific documentation in `adapters/my-provider/README.md`:
 
 ## Features
 
-- ✅ Environment variable sync
-- ✅ DNS management
-- ✅ Preview deployments
-- ❌ Build logs (not supported by API)
+- [x] Environment variable sync
+- [x] DNS management
+- [x] Preview deployments
+- [ ] Build logs (not supported by API)
 
 ## Known Limitations
 
@@ -427,4 +427,4 @@ By contributing, you agree that your contributions will be licensed under the MI
 
 ---
 
-Thank you for contributing to Deploy Tunnel! 🚇
+Thank you for contributing to Deploy Tunnel!

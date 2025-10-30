@@ -2,24 +2,40 @@
 
 A CLI-first migration utility for safely moving deployments between providers (Vercel → Cloudflare → Render) with zero-downtime preview tunnels, environment sync, route verification, and instant rollback.
 
-## 🧠 Core Concept
+## Core Concept
 
 Deploy Tunnel enables **zero-downtime migrations** between hosting providers by creating temporary proxy tunnels that allow you to test and verify your migration before cutting over DNS. The tool manages authentication, environment variables, DNS records, and provides verification tools to ensure a safe migration.
 
-## ✨ Features
+## Features
 
-- **🔐 Secure Authentication**: OS keychain integration for secure credential storage
-- **🌐 Multi-Provider Support**: Vercel, Cloudflare, Render, Netlify (extensible via adapters)
-- **🔄 Environment Sync**: Automatically sync environment variables between providers
-- **🚇 Preview Tunnels**: Test your target deployment before DNS cutover
-- **✅ Route Verification**: Compare source and target deployments route-by-route
-- **📊 State Management**: SQLite-based migration tracking and history
-- **🎨 Beautiful CLI**: Charm-powered TUI with progress indicators and styling
-- **↩️ Instant Rollback**: One-command DNS rollback if issues arise
+- **Secure Authentication**: OS keychain integration for secure credential storage
+- **Multi-Provider Support**: Vercel, Cloudflare, Render, Netlify (extensible via adapters)
+- **Environment Sync**: Automatically sync environment variables between providers
+- **Preview Tunnels**: Test your target deployment before DNS cutover
+- **Route Verification**: Compare source and target deployments route-by-route
+- **State Management**: SQLite-based migration tracking and history
+- **Beautiful CLI**: Charm-powered TUI with progress indicators and styling
+- **Instant Rollback**: One-command DNS rollback if issues arise
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Installation
+
+#### Option 1: Install via Bun (Recommended)
+
+```bash
+bun install -g deploy-tunnel
+```
+
+#### Option 2: Install via npm
+
+```bash
+npm install -g deploy-tunnel
+```
+
+> **Note**: Both methods require [Go](https://go.dev/doc/install) to be installed, as the binary is compiled during installation.
+
+#### Option 3: Build from Source
 
 ```bash
 # Clone repository
@@ -31,6 +47,12 @@ go build -o dt ./cmd/deploy-tunnel
 
 # Optional: Move to PATH
 sudo mv dt /usr/local/bin/
+```
+
+#### Verify Installation
+
+```bash
+dt --version
 ```
 
 ### Basic Workflow
@@ -62,7 +84,7 @@ dt cutover
 dt rollback
 ```
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 deploy-tunnel/
@@ -99,7 +121,7 @@ deploy-tunnel/
 └── README.md
 ```
 
-## 🏗️ Architecture
+## Architecture
 
 ### Runtime Stack
 
@@ -162,7 +184,7 @@ Adapters communicate via JSON over stdout/stderr:
 | `dns:update` | Update DNS record |
 | `dns:rollback` | Restore previous DNS record |
 
-## 🔌 Adapter Development
+## Adapter Development
 
 ### Creating a New Adapter
 
@@ -214,7 +236,7 @@ echo '{"provider":"vercel","token":"xxx","project_id":"prj_xxx"}' | \
   bun run adapters/vercel/index.ts fetch:config
 ```
 
-## 📊 State Database Schema
+## State Database Schema
 
 ```sql
 -- Migrations table
@@ -266,7 +288,7 @@ CREATE TABLE logs (
 
 Location: `~/.deploy-tunnel/state.db`
 
-## 🎨 UI Design
+## UI Design
 
 ### Color Palette
 
@@ -283,7 +305,7 @@ Location: `~/.deploy-tunnel/state.db`
 - **Header**: Bold, coral
 - **Body**: Regular, light gray
 
-## 🔐 Security
+## Security
 
 ### Credential Storage
 
@@ -302,9 +324,9 @@ Credentials are stored under the service name `deploy-tunnel` with keys formatte
 - SQLite database does not store credentials
 - All credential operations use the OS keychain API
 
-## 🛣️ Roadmap
+## Roadmap
 
-### ✅ Phase 1: Foundation (Current)
+### Phase 1: Foundation (Current)
 
 - [x] Go CLI framework
 - [x] Bun adapter bridge
@@ -315,7 +337,7 @@ Credentials are stored under the service name `deploy-tunnel` with keys formatte
 - [x] Init command
 - [x] Auth command
 
-### 🚧 Phase 2: Core Features (Next)
+### Phase 2: Core Features (Next)
 
 - [ ] Tunnel engine (local proxy)
 - [ ] DNS management
@@ -326,7 +348,7 @@ Credentials are stored under the service name `deploy-tunnel` with keys formatte
 - [ ] Cloudflare adapter
 - [ ] Render adapter
 
-### 🔮 Phase 3: Advanced Features
+### Phase 3: Advanced Features
 
 - [ ] Cloudflare Worker tunnel mode
 - [ ] Background monitoring agent
@@ -336,7 +358,7 @@ Credentials are stored under the service name `deploy-tunnel` with keys formatte
 - [ ] Audit logging
 - [ ] Slack/Discord notifications
 
-## 📝 Command Reference
+## Command Reference
 
 ### `dt init`
 
@@ -407,7 +429,7 @@ $ dt auth revoke vercel
 ✓ Credentials for vercel have been removed
 ```
 
-## 🤝 Contributing
+## Contributing
 
 Contributions are welcome! This is currently an early-stage project.
 
@@ -418,15 +440,17 @@ Contributions are welcome! This is currently an early-stage project.
 git clone https://github.com/johnhorton/deploy-tunnel.git
 cd deploy-tunnel
 
-# Install Go dependencies
-go mod download
+# Install dependencies
+npm install  # or: bun install
 
-# Install Bun dependencies
-cd adapters && bun install
+# Build the Go binary
+npm run build  # or: bun run build
 
-# Build and test
-go build -o dt ./cmd/deploy-tunnel
-./dt help
+# Test the CLI
+./bin/dt help
+
+# Run tests
+go test ./...
 ```
 
 ### Creating a New Provider Adapter
@@ -437,21 +461,21 @@ go build -o dt ./cmd/deploy-tunnel
 4. Test with the bridge protocol
 5. Submit a PR!
 
-## 📄 License
+## License
 
 MIT License - see LICENSE file for details
 
-## 🙏 Acknowledgments
+## Acknowledgments
 
 - [Charm](https://charm.sh/) - Beautiful CLI tools and libraries
 - [Bun](https://bun.sh/) - Fast JavaScript runtime
 - [Go](https://go.dev/) - Systems programming language
 
-## 📞 Support
+## Support
 
 - Issues: [GitHub Issues](https://github.com/johnhorton/deploy-tunnel/issues)
 - Discussions: [GitHub Discussions](https://github.com/johnhorton/deploy-tunnel/discussions)
 
 ---
 
-Built with ☕ and 🎨 by [@johnhorton](https://github.com/johnhorton)
+Built by [@johnhorton](https://github.com/johnhorton)

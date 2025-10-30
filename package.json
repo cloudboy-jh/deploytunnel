@@ -1,0 +1,51 @@
+{
+  "name": "deploy-tunnel",
+  "version": "1.0.0",
+  "description": "A CLI-first migration utility for safely moving deployments between providers with zero-downtime preview tunnels",
+  "type": "module",
+  "bin": {
+    "dt": "./bin/dt.js"
+  },
+  "scripts": {
+    "postinstall": "node scripts/build.js",
+    "build": "node scripts/build.js",
+    "test": "go test ./..."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/johnhorton/deploy-tunnel.git"
+  },
+  "keywords": [
+    "deployment",
+    "migration",
+    "vercel",
+    "cloudflare",
+    "render",
+    "netlify",
+    "zero-downtime",
+    "dns",
+    "tunnel",
+    "cli"
+  ],
+  "author": "John Horton",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/johnhorton/deploy-tunnel/issues"
+  },
+  "homepage": "https://github.com/johnhorton/deploy-tunnel#readme",
+  "engines": {
+    "node": ">=18.0.0"
+  },
+  "files": [
+    "bin/",
+    "scripts/",
+    "cmd/",
+    "internal/",
+    "ui/",
+    "adapters/",
+    "go.mod",
+    "go.sum",
+    "README.md",
+    "LICENSE"
+  ]
+}

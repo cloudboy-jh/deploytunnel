@@ -1,0 +1,54 @@
+# Development files
+.git
+.github
+.vscode
+.idea
+*.swp
+*.swo
+*~
+
+# Build artifacts (keep the bin/ directory for compiled binary)
+*.test
+*.out
+coverage.txt
+
+# Dependencies
+node_modules/
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Test files
+*_test.go
+testdata/
+
+# Documentation drafts
+docs/
+*.draft.md
+
+# CI/CD
+.travis.yml
+.gitlab-ci.yml
+.circleci/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# IDE
+*.iml
+.project
+.classpath
+.settings/
+
+# Temporary files
+tmp/
+temp/
+*.tmp
+
+# Images (except the README images)
+*.png
+!deploytunneltext.png
+!deploytunnel.png
